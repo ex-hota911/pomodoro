@@ -10,14 +10,21 @@ Pomodoro app synched between all devices.
 # App
 
 ```
-Initialized <-[Reset]
-|
-| [Start]
-V
-Running --[Finish]-> Finished
-A
-| [Pause/Restart]
-V
-Paused
-
++-------+
+| Init  |
++---+---+
+    |
+    | +-----+
+    | |     |
++---v-v-+   | Reset
+|       +---+
+| Work  |
+|       <---------------+
++---+---+               |
+    |                   |
+    | after 25 min      | After 5 min
+    |                   | or Reset
++---v---+               |
+| Break +---------------+
++-------+
 ````
