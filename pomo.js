@@ -29,6 +29,9 @@ class TimeEditor extends React.Component {
         <button onClick={() => this.props.onReset(this.state.value)}>
 		  Reset
 	    </button>
+        <button onClick={() => this.props.onReset(0.05)}>
+		  3 sec
+	    </button>
 	  </div>
 	)
   }
@@ -47,11 +50,19 @@ class Timer extends React.Component {
 	  remaningTime: this.props.time * 1000,
 	};
   }
+  reset() {
+	this.setState({
+	  remaningTime: this.props.time * 1000,
+	  start: null,
+	  interval: null,
+	});
+  }
   tick() {
 	var time = this.getTime();
 	if (time == 0) {
 	  this.stopTimer();
-	  notifyMe();
+	  
+	  notify(() => this.reset());
 	  return;
 	}
 	this.forceUpdate();
@@ -167,30 +178,34 @@ class App extends React.Component {
   }
 }
 
-function notifyMe() {
-  // ブラウザが通知をサポートしているか確認する
-  if (!("Notification" in window)) {
-    alert("このブラウザはシステム通知をサポートしていません");
-  }
 
-  // すでに通知の許可を得ているか確認する
-  else if (Notification.permission === "granted") {
-    // 許可を得ている場合は、通知を作成する
-    var notification = new Notification("Hi there!");
+var supportNotification = "Notification" in window;
+function maybeGetPermission() {
+  if (!supportNotification) {
+	return;
+  } 
+  if (Notification.permission === "granted") {
+	return;
   }
+  Notification.requestPermission();
+}
 
-  // 許可を得ていない場合は、ユーザに許可を求めなければならない
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
-      // ユーザが許可した場合は、通知を作成する
-      if (permission === "granted") {
-        var notification = new Notification("Hi there!");
-      }
-    });
+maybeGetPermission();
+
+function notify(onclick) {
+  if (!supportNotification || Notification.permission !== "granted") {
+	console.error('permission is not granted.');
+	return;
   }
-
-  // 最後に、ユーザが通知を拒否した場合は、これ以上ユーザに 
-  // 迷惑をかけてはいけないことを尊重すべきです。
+  var options = {
+	requireInteraction: true,
+  }
+  var notif = new Notification("Hi there!", options);
+  notif.onclick = function(e) {
+	onclick(e);
+	notif.close();
+	window.focus();
+  }
 }
 
 ReactDOM.render(
