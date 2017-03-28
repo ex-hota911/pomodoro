@@ -1,0 +1,38 @@
+{
+  "name": "pomodoro",
+  "version": "1.0.0",
+  "babel": {
+    "presets": [
+      "react",
+      "es2015"
+    ]
+  },
+  "description": "Pomodoro app synched between all devices.",
+  "main": "pomo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hota911/pomodoro.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hota911/pomodoro/issues"
+  },
+  "homepage": "https://github.com/hota911/pomodoro#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0"
+  }
+}
