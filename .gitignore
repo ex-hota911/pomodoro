@@ -1,6 +1,9 @@
 # Generated code
 lib
 
+# For offline development
+offline
+
 # Logs
 logs
 *.log
