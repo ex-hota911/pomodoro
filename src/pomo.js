@@ -18,28 +18,34 @@ TimeComp.propTypes = {
 }
 
 /**
- * 
+ * Stateful editor.
  */
-function TimeEditor(props) {
-  return (
-	  <div>
+class TimeEditor extends React.Component {
+  constructor () {
+	super();
+	this.state = {
+	  workValue: '-3',
+	  breakValue: '-2'
+	}
+  }
+  render() {
+	var props = this.props;
+	return (
+		<div>
    	    Work:
-	    <input type="number" value={props.workTime} onChange={(e) => props.setWork(e.target.value)}/> min
+	    <input type="number" value={this.state.workValue} onChange={(e) => this.setState({workValue : e.target.value})}/> min
 	    Break:
-	    <input type="number" value={props.breakTime} onChange={(e) => props.setBreak(e.target.value)}/> min
-        <button onClick={() => props.onReset()}>
-          Reset
-	    </button>
-	  </div>
+	    <input type="number" value={this.state.breakValue} onChange={(e) => this.setState({breakValue : e.target.value})}/> min
+        <button onClick={() => this.props.onReset(this.state.workValue, this.state.breakValue)}>
+        Reset
+	  </button>
+		</div>
 	)
+  }
 }
 
 TimeEditor.propTypes = {
-  workTime: React.PropTypes.string,
-  breakTime: React.PropTypes.string,
   onReset: React.PropTypes.func,
-  setWork: React.PropTypes.func,
-  setBreak: React.PropTypes.func,
 }
 
 class Timer {
@@ -50,7 +56,7 @@ class Timer {
 	this.onFinish = onFinish;
 	this.remainingTime = time;
   }
-  tick() {
+  tick_() {
 	var time = this.getTime();
 	if (time == 0) {
 	  this.stopTimer();
@@ -84,7 +90,7 @@ class Timer {
 	  this.onFinish();
 	  return;
 	}
-	this.interval = window.setInterval(() => {this.tick();}, 1000);
+	this.interval = window.setInterval(this.tick_.bind(this), 1000);
 	this.start = new Date().getTime();
 
 	console.log(this.getTime());
@@ -194,10 +200,12 @@ class App extends React.Component {
 	}
   }
 
-  reset() {
-	this.timer.stopTimer();
-	var workTime = parseInt(this.state.formWork, 10);
-	var breakTime = parseInt(this.state.formBreak, 10);
+  reset(workValue, breakValue) {
+	if (this.state.running) {
+	  this.timer.stopTimer();
+	}
+	var workTime = parseInt(workValue, 10);
+	var breakTime = parseInt(breakValue, 10);
 	this.setState({
 	  workTime: workTime,
 	  breakTime: breakTime,
@@ -228,10 +236,6 @@ class App extends React.Component {
 		  {startWork}
 		</button>
 		<TimeEditor label="Work" 
-	                workTime={this.state.formWork}
-	                breakTime={this.state.formBreak}
-  	                setWork={(value) => {this.setState({formWork: value});}}
-  	                setBreak={(value) => {this.setState({formBreak: value});}}
 	                onReset={this.reset.bind(this)} 
 		/>
 	  </div>
