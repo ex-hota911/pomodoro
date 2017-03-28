@@ -87,6 +87,7 @@ class Timer {
 	this.interval = window.setInterval(() => {this.tick();}, 1000);
 	this.start = new Date().getTime();
 
+	console.log(this.getTime());
 	this.onTick(this.getTime(), true);
   }
   stopTimer() {
@@ -94,12 +95,14 @@ class Timer {
 	  console.error('Timer is already stopped');
 	  return;
 	}
-	this.remaningTime = this.getTime();
+	this.remainingTime = this.getTime();
+	console.log(this.remainingTime);
 	window.clearInterval(this.interval);
 	this.interval = null;
 	this.start = null;
 
-	this.onTick(this.remaningTime, false);
+	this.onTick(this.remainingTime, false);
+	console.log(this.remainingTime);
   }
   isRunning() {
 	return !!this.interval;
@@ -134,6 +137,7 @@ class App extends React.Component {
   }
 
   onFinish() {
+	console.log('onfinish');
 	var time;
 	if (this.state.isWork) {
 	  time = this.setBreak(this.state.breakTime);
@@ -182,6 +186,7 @@ class App extends React.Component {
   }
 
   pauseResumeClicked() {
+	console.log('pauseResumeClicked');
 	if (this.state.running) {
 	  this.timer.stopTimer();
 	} else {
@@ -209,6 +214,7 @@ class App extends React.Component {
   render() {
 	var time = this.state.time;
 	console.log(this.state);
+	console.log(this.timer);
 	var pauseResume = (this.state.running) ? 'Pause' : 'Resume';
 	var startWork = (this.state.isWork) ? 'Restart' : 'Start work.';
 	var stateClass = (this.state.isWork) ? 'work' : 'break';
