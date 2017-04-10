@@ -27,7 +27,7 @@ function TimeComp(props) {
 TimeComp.propTypes = {
   // Time in milli sec.
   time : React.PropTypes.number
-}
+};
 
 /**
  * Stateful editor.
@@ -38,35 +38,34 @@ class TimeEditor extends React.Component {
 	this.state = {
 	  workValue: '25',
 	  breakValue: '5'
-	}
+	};
   }
   render() {
 	var props = this.props;
 	return (
+	  <div>
 		<div>
-		<div>
-    	  Work:
-	      <input type="number" value={this.state.workValue} 
-	      onChange={(e) => this.setState({workValue : e.target.value})}/> 
+		  Work:
+		  <input type="number" value={this.state.workValue} onChange={(e) => {this.setState({workValue : e.target.value});}}/> 
+
 		  min
-	    </div>
-		<div>
-	    Break:
-	    <input type="number" value={this.state.breakValue} 
-	    onChange={(e) => this.setState({breakValue : e.target.value})}/>
-		min
-	  </div>
-        <button onClick={() => this.props.onReset(this.state.workValue, this.state.breakValue)}>
-        Reset
-	  </button>
 		</div>
-	)
+		<div>
+		  Break:
+		  <input type="number" value={this.state.breakValue} onChange={(e) => this.setState({breakValue : e.target.value})}/>
+		  min
+		</div>
+		<button onClick={() => {this.props.onReset(this.state.workValue, this.state.breakValue);}}>
+		  Reset
+		</button>
+</div>
+	);
   }
 }
 
 TimeEditor.propTypes = {
-  onReset: React.PropTypes.func,
-}
+  onReset: React.PropTypes.func
+};
 
 class Timer {
   constructor(time, onTick, onFinish) {
@@ -145,7 +144,7 @@ class App extends React.Component {
 	  formBreak: '-2',
 	  timeInMillis: 25 * 60 * 1000,
 	  isWork: true,
-	  running: false,
+	  running: false
 	};
 	this.timer = new Timer(this.state.timeInMillis, this.tick.bind(this), this.onFinish.bind(this));
   }
@@ -158,8 +157,8 @@ class App extends React.Component {
   tick(time, isRunning) {
 	this.setState({
 	  timeInMillis: time,
-	  running: isRunning,
-	})
+	  running: isRunning
+	});
   }
 
   onFinish() {
@@ -228,7 +227,7 @@ class App extends React.Component {
 	var breakTime = parseInt(breakValue, 10);
 	this.setState({
 	  workTime: workTime,
-	  breakTime: breakTime,
+	  breakTime: breakTime
 	});
 	this.setWork(workTime);
   }
@@ -249,15 +248,9 @@ class App extends React.Component {
 	return (
 	  <div className={stateClass}>
 		<TimeComp time={this.state.timeInMillis}/>
-		<button onClick={()=>this.pauseResumeClicked()}>
-		  {pauseResume}
-        </button>
-		<button onClick={()=>this.startWork()}>
-		  {startWork}
-		</button>
-		<TimeEditor label="Work" 
-	                onReset={this.reset.bind(this)} 
-		/>
+		<button onClick={()=>{this.pauseResumeClicked();}}> {pauseResume} </button>
+		<button onClick={()=>{this.startWork();}}>  {startWork} </button>
+		<TimeEditor label="Work" onReset={this.reset.bind(this)} />
 	  </div>
 	);
   }
@@ -284,14 +277,14 @@ function notify(onclick) {
 	return;
   }
   var options = {
-	requireInteraction: true,
-  }
+	requireInteraction: true
+  };
   var notif = new Notification("Hi there!", options);
   notif.onclick = function(e) {
 	onclick(e);
 	notif.close();
 	window.focus();
-  }
+  };
 }
 
 // Render
