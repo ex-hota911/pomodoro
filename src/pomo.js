@@ -1,10 +1,22 @@
+function UpdateHead(min, sec) {
+  document.title = `${min}:${sec}`;
+
+  if (sec == 0 || sec == 59) {
+	var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+	link.type = 'image/x-icon';
+	link.rel = 'shortcut icon';
+	link.href = `/img/${min}.svg`;
+	document.getElementsByTagName('head')[0].appendChild(link);
+  }
+}
+
 function TimeComp(props) {
   var sec = Math.round(props.time / 1000);
   var min = Math.floor(sec / 60);
   sec = sec % 60;
   sec = ((sec < 10)? '0':'') + sec;
   // Hack
-  document.title = min + ':' + sec;
+  UpdateHead(min, sec);
   return (
 	<div>
 	  {min} : {sec}
@@ -24,18 +36,26 @@ class TimeEditor extends React.Component {
   constructor () {
 	super();
 	this.state = {
-	  workValue: '-3',
-	  breakValue: '-2'
+	  workValue: '25',
+	  breakValue: '5'
 	}
   }
   render() {
 	var props = this.props;
 	return (
 		<div>
-   	    Work:
-	    <input type="number" value={this.state.workValue} onChange={(e) => this.setState({workValue : e.target.value})}/> min
+		<div>
+    	  Work:
+	      <input type="number" value={this.state.workValue} 
+	      onChange={(e) => this.setState({workValue : e.target.value})}/> 
+		  min
+	    </div>
+		<div>
 	    Break:
-	    <input type="number" value={this.state.breakValue} onChange={(e) => this.setState({breakValue : e.target.value})}/> min
+	    <input type="number" value={this.state.breakValue} 
+	    onChange={(e) => this.setState({breakValue : e.target.value})}/>
+		min
+	  </div>
         <button onClick={() => this.props.onReset(this.state.workValue, this.state.breakValue)}>
         Reset
 	  </button>
@@ -279,3 +299,4 @@ ReactDOM.render(
   <App />,
   document.getElementById('container')
 );
+

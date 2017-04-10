@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+	<style>
+	  .work {
+	  background: #FAA;
+	  }
+	  .break {
+	  background: #AFA;
+	  }
+	</style>
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.7.3/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-auth.js"></script>
+  <script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDmekUX2ksdBCtzJqFNK6OwWBXNlo9083E",
+    authDomain: "pomodoro-ee99e.firebaseapp.com",
+    databaseURL: "https://pomodoro-ee99e.firebaseio.com",
+    storageBucket: "pomodoro-ee99e.appspot.com",
+    messagingSenderId: "914042537984"
+  };
+  firebase.initializeApp(config);
+  </script>
+  <!-- React -->
+  <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="lib/pomo.js" type="text/babel"></script>
+</html>
