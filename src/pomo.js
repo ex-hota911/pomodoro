@@ -1,3 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 function UpdateHead(min, sec) {
   document.title = `${min}:${sec}`;
 
@@ -134,6 +138,19 @@ class Timer {
   }
 }
 
+function History(props) {
+  return (
+	<table>
+	  <tbody>
+		<tr>
+		  <td> Today </td>
+		  <td> {props.today} </td>
+		</tr>
+	  </tbody>
+	</table>
+  );
+};
+
 class App extends React.Component {
   constructor() {
 	super();
@@ -144,7 +161,8 @@ class App extends React.Component {
 	  formBreak: '-2',
 	  timeInMillis: 25 * 60 * 1000,
 	  isWork: true,
-	  running: false
+	  running: false,
+	  today: 0
 	};
 	this.timer = new Timer(this.state.timeInMillis, this.tick.bind(this), this.onFinish.bind(this));
   }
@@ -162,18 +180,16 @@ class App extends React.Component {
   }
 
   onFinish() {
-	console.log('onfinish');
-	var time;
+	var message;
 	if (this.state.isWork) {
-	  time = this.setBreak(this.state.breakTime);
+	  this.setBreak(this.state.breakTime);
+	  this.setState({today: this.state.today + 1});
+	  message = 'Time for break!';
 	} else {
-	  time = this.setWork(this.state.workTime);
+	  this.setWork(this.state.workTime);
+	  message = 'Time for work!';
 	}
-	this.setState({running: false});
-	notify(() => {
-	  // There is a race condition.
-	  this.timer.startTimer();
-	});
+	notify(message, () => {this.timer.startTimer();});
   }
 
   setWork(workTime) {
@@ -250,11 +266,18 @@ class App extends React.Component {
 		<TimeComp time={this.state.timeInMillis}/>
 		<button onClick={()=>{this.pauseResumeClicked();}}> {pauseResume} </button>
 		<button onClick={()=>{this.startWork();}}>  {startWork} </button>
-		<TimeEditor label="Work" onReset={this.reset.bind(this)} />
+		<TimeEditor onReset={this.reset.bind(this)} />
+		<History today={this.state.today} />
 	  </div>
 	);
   }
 }
+
+const MuiApp = () => (
+  <MuiThemeProvider>
+	<App />
+  </MuiThemeProvider>
+);
 
 
 // Notifications
@@ -271,25 +294,27 @@ function maybeGetPermission() {
 
 maybeGetPermission();
 
-function notify(onclick) {
+function notify(message, onclick) {
   if (!supportNotification || Notification.permission !== "granted") {
 	console.error('permission is not granted.');
-	return;
+	return null;
   }
   var options = {
-	requireInteraction: true
+	requireInteraction: true,
+	tag: 'pomodoro-notification'
   };
-  var notif = new Notification("Hi there!", options);
+  var notif = new Notification(message, options);
   notif.onclick = function(e) {
 	onclick(e);
 	notif.close();
 	window.focus();
   };
-}
+  return notif;
+};
 
 // Render
 ReactDOM.render(
-  <App />,
+  <MuiApp />,
   document.getElementById('container')
 );
 
