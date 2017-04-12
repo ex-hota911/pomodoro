@@ -26,6 +26,7 @@
   "homepage": "https://github.com/hota911/pomodoro#readme",
   "dependencies": {
     "babel": "^6.23.0",
+    "firebase": "^3.7.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },

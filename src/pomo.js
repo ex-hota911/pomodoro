@@ -2,6 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/storage';
+
+
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyDmekUX2ksdBCtzJqFNK6OwWBXNlo9083E",
+  authDomain: "pomodoro-ee99e.firebaseapp.com",
+  databaseURL: "https://pomodoro-ee99e.firebaseio.com",
+  storageBucket: "pomodoro-ee99e.appspot.com",
+  messagingSenderId: "914042537984"
+};
+firebase.initializeApp(config);
+
 function UpdateHead(min, sec) {
   document.title = `${min}:${sec}`;
 
