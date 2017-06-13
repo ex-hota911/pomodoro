@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import * as firebase from 'firebase/app';
+import Time from './components/Time.js'
+
+import 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
-
 
 // Initialize Firebase
 var config = {
@@ -17,6 +18,35 @@ var config = {
   messagingSenderId: "914042537984"
 };
 firebase.initializeApp(config);
+
+var user = firebase.auth().currentUser;
+var name, email, photoUrl, uid;
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+	name = user.displayName;
+	email = user.email;
+	photoUrl = user.photoURL;
+	// The user's ID, unique to the Firebase project. Do NOT use
+    // this value to authenticate with your backend server, if
+    // you have one. Use User.getToken() instead.
+	uid = user.uid; 
+	console.log(user);
+  } else {
+	var provider = new firebase.auth.GoogleAuthProvider();
+	firebase.auth().signInWithPopup(provider).then(function(result) {
+	  var token = result.credential.accessToken;
+	  var user = result.user;
+	}).catch(function(error) {
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	  // The email of the user's account used.
+	  var email = error.email;
+	  // The firebase.auth.AuthCredential type that was used.
+	  var credential = error.credential;
+	});
+  }
+});
 
 function UpdateHead(min, sec) {
   document.title = `${min}:${sec}`;
@@ -30,24 +60,30 @@ function UpdateHead(min, sec) {
   }
 }
 
-function TimeComp(props) {
-  var sec = Math.round(props.time / 1000);
-  var min = Math.floor(sec / 60);
-  sec = sec % 60;
-  sec = ((sec < 10)? '0':'') + sec;
-  // Hack
-  UpdateHead(min, sec);
+const TimeEditor2 = ({onReset}) => {
+  let workInput;
+  let breakInput;
+  let continueInput;
+
+  let onClick = () => {onReset(workInput.value, breakInput.value, continueInput.value);}
+  
   return (
 	<div>
-	  {min} : {sec}
-	</div>
-  );
-};
-
-TimeComp.propTypes = {
-  // Time in milli sec.
-  time : React.PropTypes.number
-};
+	  <div>
+	    Work:
+	    <input type="number" ref={(input)=>{workInput=input;}} />
+	  </div>
+	  <div>
+        Break:
+	    <input type="number" ref={(input)=>{breakInput=input;}} />
+	  </div>
+	  <input type="checkbox" ref={(input)=>{continueInput=input;}} /> Cotinue when finished.
+      <button onClick={onClick}>
+	    Reset
+	  </button>
+    </div>
+  )
+}
 
 /**
  * Stateful editor.
@@ -279,10 +315,11 @@ class App extends React.Component {
 	var stateClass = (this.state.isWork) ? 'work' : 'break';
 	return (
 	  <div className={stateClass}>
-		<TimeComp time={this.state.timeInMillis}/>
+		<div> hi {name} </div>
+		<Time time={this.state.timeInMillis}/>
 		<button onClick={()=>{this.pauseResumeClicked();}}> {pauseResume} </button>
 		<button onClick={()=>{this.startWork();}}>  {startWork} </button>
-		<TimeEditor onReset={this.reset.bind(this)} />
+		<TimeEditor2 onReset={this.reset.bind(this)} />
 		<History today={this.state.today} />
 	  </div>
 	);

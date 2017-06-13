@@ -11,7 +11,7 @@
   "main": "pomo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib; webpack lib/pomo.js public/lib/bundle.js",
+    "build": "babel src -d lib; webpack lib/index.js public/lib/bundle.js",
     "serve": "firebase serve"
   },
   "repository": {
@@ -25,10 +25,12 @@
   },
   "homepage": "https://github.com/hota911/pomodoro#readme",
   "dependencies": {
-    "babel": "^6.23.0",
     "firebase": "^3.7.5",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.4",
+    "reduce-reducers": "^0.1.2",
+    "redux": "^3.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
